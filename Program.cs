@@ -7,6 +7,7 @@ namespace Kotitehtava_Delegate
         public delegate void SortDelegate(int[] num);
         public delegate int[] CreateArrayDelegate(int size);
 
+
         static int[] CreateRandomArray(int size)
         {
             // tee taulukko satunnaislukuja
