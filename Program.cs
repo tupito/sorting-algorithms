@@ -119,9 +119,8 @@ namespace Kotitehtava_Delegate
 
         static void MergeSortMain(int[] num)
         {
-            Console.WriteLine("\nMergeSort TODO");
-            MergeSort(num, num[0], num.Length-1);
-
+            Console.WriteLine("\nMergeSort");
+            MergeSort(num, 0, num.Length-1);
         }
 
         static public void MergeSort(int[] arr, int p, int r)
@@ -189,24 +188,28 @@ namespace Kotitehtava_Delegate
             int arrSize = 10000;
 
             int[] num = new int[arrSize];
+
+            // järjestämätön taulukko
             num = CreateRandomArray(randomOrder, arrSize);
-            Stopwatch kello = Stopwatch.StartNew(); // ota aika, käynnistä ajastin
-            sortDelegate(num);                      // kutsu järjestysalgoritmiä
-            var elapsedTime = kello.Elapsed;        // ota aika ja tulosta se
+            var elapsedTime = MittaaAika(sortDelegate, num);
             Console.WriteLine("Järjestämätön taulukko, aika: {0}", elapsedTime);
 
+            // nouseva järjestys
             num = CreateRandomArray(ascOrder, arrSize);
-            kello = Stopwatch.StartNew();       // ota aika, käynnistä ajastin
-            sortDelegate(num);                  // kutsu järjestysalgoritmiä
-            elapsedTime = kello.Elapsed;        // ota aika ja tulosta se
+            elapsedTime = MittaaAika(sortDelegate, num);
             Console.WriteLine("Nouseva taulukko, aika: {0}", elapsedTime);
 
+            // laskeva järjestys
             num = CreateRandomArray(descOrder, arrSize);
-            kello = Stopwatch.StartNew();       // ota aika, käynnistä ajastin
-            sortDelegate(num);                  // kutsu järjestysalgoritmiä
-            elapsedTime = kello.Elapsed;        // ota aika ja tulosta se
+            elapsedTime = MittaaAika(sortDelegate, num);
             Console.WriteLine("Laskeva taulukko, aika: {0}", elapsedTime);
+        }
 
+        static TimeSpan MittaaAika(SortDelegate sortDelegate, int[] num)
+        {
+            Stopwatch kello = Stopwatch.StartNew(); // käynnistä ajastin
+            sortDelegate(num);                      // kutsu järjestysalgoritmiä
+            return kello.Elapsed;                   // palauta aika
         }
 
         static void Main(string[] args)
