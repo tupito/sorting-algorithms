@@ -27,7 +27,6 @@ namespace Kotitehtava_Delegate
 
         static int[] CreateAscendingTable(int size)
         {
-            Console.WriteLine("\nNouseva taulukko:");
             int[] num = new int[size];
             num = CreateRandomOrderTable(size);
             Array.Sort(num);
@@ -36,10 +35,8 @@ namespace Kotitehtava_Delegate
 
         static int[] CreateDescendingTable(int size)
         {
-            Console.WriteLine("\nLaskeva taulukko:");
             int[] num = new int[size];
             num = CreateRandomOrderTable(size);
-
             Array.Sort<int>(num, new Comparison<int>(
                         (n1, n2) => n2.CompareTo(n1)
                     ));
@@ -81,7 +78,7 @@ namespace Kotitehtava_Delegate
                 num[j + 1] = key;
             }
         }
-        private static void QuickSort(int[] a, int lo, int hi)
+        static void QuickSort(int[] a, int lo, int hi)
         {
             //  lo is the lower index, hi is the upper index
             //  of the region of array a that is to be sorted
@@ -120,56 +117,111 @@ namespace Kotitehtava_Delegate
             Array.Sort(num);
         }
 
+        static void MergeSortMain(int[] num)
+        {
+            Console.WriteLine("\nMergeSort TODO");
+            MergeSort(num, num[0], num.Length-1);
+
+        }
+
+        static public void MergeSort(int[] arr, int p, int r)
+        {
+            if (p < r)
+            {
+                int q = (p + r) / 2;
+                MergeSort(arr, p, q);
+                MergeSort(arr, q + 1, r);
+                Merge(arr, p, q, r);
+            }
+        }
+        static public void Merge(int[] arr, int p, int q, int r)
+        {
+            int i, j, k;
+            int n1 = q - p + 1;
+            int n2 = r - q;
+            int[] L = new int[n1];
+            int[] R = new int[n2];
+            for (i = 0; i < n1; i++)
+            {
+                L[i] = arr[p + i];
+            }
+            for (j = 0; j < n2; j++)
+            {
+                R[j] = arr[q + 1 + j];
+            }
+            i = 0;
+            j = 0;
+            k = p;
+            while (i < n1 && j < n2)
+            {
+                if (L[i] <= R[j])
+                {
+                    arr[k] = L[i];
+                    i++;
+                }
+                else
+                {
+                    arr[k] = R[j];
+                    j++;
+                }
+                k++;
+            }
+            while (i < n1)
+            {
+                arr[k] = L[i];
+                i++;
+                k++;
+            }
+            while (j < n2)
+            {
+                arr[k] = R[j];
+                j++;
+                k++;
+            }
+        }
+
         static void TeeMittaukset(SortDelegate sortDelegate)
         {
             CreateArrayDelegate randomOrder = new CreateArrayDelegate(CreateRandomOrderTable);
             CreateArrayDelegate ascOrder = new CreateArrayDelegate(CreateAscendingTable);
             CreateArrayDelegate descOrder = new CreateArrayDelegate(CreateDescendingTable);
 
-            int[] num = new int[10];
-            num = CreateRandomArray(randomOrder, 10);
+            int arrSize = 10000;
 
+            int[] num = new int[arrSize];
+            num = CreateRandomArray(randomOrder, arrSize);
             Stopwatch kello = Stopwatch.StartNew(); // ota aika, käynnistä ajastin
-            sortDelegate(num);
+            sortDelegate(num);                      // kutsu järjestysalgoritmiä
             var elapsedTime = kello.Elapsed;        // ota aika ja tulosta se
-            Console.WriteLine("aika: {0}", elapsedTime);
+            Console.WriteLine("Järjestämätön taulukko, aika: {0}", elapsedTime);
+
+            num = CreateRandomArray(ascOrder, arrSize);
+            kello = Stopwatch.StartNew();       // ota aika, käynnistä ajastin
+            sortDelegate(num);                  // kutsu järjestysalgoritmiä
+            elapsedTime = kello.Elapsed;        // ota aika ja tulosta se
+            Console.WriteLine("Nouseva taulukko, aika: {0}", elapsedTime);
+
+            num = CreateRandomArray(descOrder, arrSize);
+            kello = Stopwatch.StartNew();       // ota aika, käynnistä ajastin
+            sortDelegate(num);                  // kutsu järjestysalgoritmiä
+            elapsedTime = kello.Elapsed;        // ota aika ja tulosta se
+            Console.WriteLine("Laskeva taulukko, aika: {0}", elapsedTime);
 
         }
 
         static void Main(string[] args)
         {
-            Console.WriteLine("Deletage-version");
-
             SortDelegate selectionSort = new SortDelegate(SelectionSort);
             SortDelegate insertionSort = new SortDelegate(InsertionSort);
             SortDelegate quick = new SortDelegate(QuickSortMain);
             SortDelegate arraySort = new SortDelegate(ArraySort);
+            SortDelegate mergeSort = new SortDelegate(MergeSortMain);
 
             TeeMittaukset(selectionSort);
             TeeMittaukset(insertionSort);
             TeeMittaukset(quick);
             TeeMittaukset(arraySort);
-
-            //testing
-            /*
-            int[] test = new int[10];
-            test = CreateAscendingTable(10);
-            Console.WriteLine("Asc table, testing");
-            foreach (var item in test)
-            {
-                Console.WriteLine(item);
-            }
-            */
-
-            //testing
-            /*test = CreateDescendingTable(10);
-            Console.WriteLine("desc, testing");
-            foreach (var item in test)
-            {
-                Console.WriteLine(item);
-            }*/
-
-
+            TeeMittaukset(mergeSort);
         }
     }
 }
