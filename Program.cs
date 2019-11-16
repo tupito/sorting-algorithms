@@ -6,9 +6,28 @@ namespace Kotitehtava_Delegate
     class Program
     {
         public delegate void SortDelegate(int[] num);
-        //public delegate int[] CreateArrayDelegate(int size);
+        public delegate int[] CreateArrayDelegate(int size);
 
-        static int[] CreateRandomArray(int size)
+        static int[] CreateRandomArray(CreateArrayDelegate createArrayDelegate, int size)
+        {
+            return createArrayDelegate(size);
+        }
+
+        static int[] CreateAscendingTable(int size)
+        {
+
+            int[] num = new int[size];
+            Random generator = new Random();
+            for (int i = 0; i < num.Length; i++)
+            {
+                num[i] = generator.Next(size);
+            }
+
+            Array.Sort(num);
+            return num;
+        }
+
+        static int[] CreateDescendingTable(int size)
         {
             int[] num = new int[size];
             Random generator = new Random();
@@ -16,6 +35,10 @@ namespace Kotitehtava_Delegate
             {
                 num[i] = generator.Next(size);
             }
+
+            Array.Sort<int>(num, new Comparison<int>(
+                        (n1, n2) => n2.CompareTo(n1)
+                    ));
             return num;
         }
 
@@ -103,26 +126,40 @@ namespace Kotitehtava_Delegate
             }
         }
 
-
         static void QuickSortMain(int[] num)
         {
             Console.WriteLine("\nQuicksort");
             QuickSort(num, 0, num.Length - 1);
         }
 
+        static void ArraySort(int[] num)
+        {
+            Console.WriteLine("\nArray.Sort");
+            Array.Sort(num);
+        }
+
         static void Metodi(SortDelegate sortDelegate)
         {
-            // luo taulukko (satunnaisluvuilla)
+            // CreateArrayDelegate randomOrder = new CreateArrayDelegate(RandomOrder);
+            CreateArrayDelegate ascOrder = new CreateArrayDelegate(CreateAscendingTable);
+            CreateArrayDelegate descOrder = new CreateArrayDelegate(CreateDescendingTable);
+
+            //CreateAscendingTable(ascOrder);
             int[] num = new int[10000];
-            num = CreateRandomArray(10000);
-            // ota aika
-            // käynnistä ajastin
+            num = CreateRandomArray(ascOrder, 10000);
+
+
+            // luo taulukko (satunnaisluvuilla)
+            //int[] num = new int[10000];
+            //num = CreateRandomArray(10000);
+
+            // ota aika, käynnistä ajastin
             Stopwatch kello = Stopwatch.StartNew();
             sortDelegate(num);
             // ota aika ja tulosta se
             var elapsedTime = kello.Elapsed;
             Console.WriteLine("aika: {0}", elapsedTime);
-            
+
             /*foreach (var item in num)
             {
                 Console.Write($"{item} ");
@@ -133,16 +170,40 @@ namespace Kotitehtava_Delegate
         {
             Console.WriteLine("Deletage-version");
 
-            SortDelegate ds1 = new SortDelegate(SelectionSort);
-            SortDelegate ds2 = new SortDelegate(InsertionSort);
+            SortDelegate selectionSort = new SortDelegate(SelectionSort);
+            SortDelegate insertionSort = new SortDelegate(InsertionSort);
             SortDelegate quick = new SortDelegate(QuickSortMain);
+            SortDelegate arraySort = new SortDelegate(ArraySort);
 
             // testataan sort1
-            Metodi(ds1);
+            Metodi(selectionSort);
             // testataan sort2
-            Metodi(ds2);
+            Metodi(insertionSort);
             // testataan sort2
             Metodi(quick);
+            // Array.sort
+            Metodi(arraySort);
+
+            //testing
+            /*
+            int[] test = new int[10];
+            test = CreateAscendingTable(10);
+            Console.WriteLine("Asc table, testing");
+            foreach (var item in test)
+            {
+                Console.WriteLine(item);
+            }
+            */
+
+            //testing
+            /*test = CreateDescendingTable(10);
+            Console.WriteLine("desc, testing");
+            foreach (var item in test)
+            {
+                Console.WriteLine(item);
+            }*/
+
+
         }
     }
 }
