@@ -13,9 +13,8 @@ namespace Kotitehtava_Delegate
             return createArrayDelegate(size);
         }
 
-        static int[] CreateAscendingTable(int size)
+        static int[] CreateRandomOrderTable(int size)
         {
-
             int[] num = new int[size];
             Random generator = new Random();
             for (int i = 0; i < num.Length; i++)
@@ -23,18 +22,23 @@ namespace Kotitehtava_Delegate
                 num[i] = generator.Next(size);
             }
 
+            return num;
+        }
+
+        static int[] CreateAscendingTable(int size)
+        {
+            Console.WriteLine("\nNouseva taulukko:");
+            int[] num = new int[size];
+            num = CreateRandomOrderTable(size);
             Array.Sort(num);
             return num;
         }
 
         static int[] CreateDescendingTable(int size)
         {
+            Console.WriteLine("\nLaskeva taulukko:");
             int[] num = new int[size];
-            Random generator = new Random();
-            for (int i = 0; i < num.Length; i++)
-            {
-                num[i] = generator.Next(size);
-            }
+            num = CreateRandomOrderTable(size);
 
             Array.Sort<int>(num, new Comparison<int>(
                         (n1, n2) => n2.CompareTo(n1)
@@ -77,55 +81,33 @@ namespace Kotitehtava_Delegate
                 num[j + 1] = key;
             }
         }
-
-        private static int Partition(int[] num, int lo, int hi)
+        private static void QuickSort(int[] a, int lo, int hi)
         {
-            int pivot = num[lo];
-            while (true)
+            //  lo is the lower index, hi is the upper index
+            //  of the region of array a that is to be sorted
+            int i = lo, j = hi, h;
+
+            // comparison element x
+            int x = a[(lo + hi) / 2];
+
+            //  partition
+            do
             {
-
-                while (num[lo] < pivot)
+                while (a[i] < x) i++;
+                while (a[j] > x) j--;
+                if (i <= j)
                 {
-                    lo++;
+                    h = a[i];
+                    a[i] = a[j];
+                    a[j] = h;
+                    i++; j--;
                 }
+            } while (i <= j);
 
-                while (num[hi] > pivot)
-                {
-                    hi--;
-                }
-
-                if (lo < hi)
-                {
-                    if (num[lo] == num[hi]) return hi;
-
-                    int temp = num[lo];
-                    num[lo] = num[hi];
-                    num[hi] = temp;
-                }
-                else
-                {
-                    return hi;
-                }
-            }
+            //  recursion
+            if (lo < j) QuickSort(a, lo, j);
+            if (i < hi) QuickSort(a, i, hi);
         }
-
-        static void QuickSort(int[] num, int lo, int hi)
-        {
-            if (lo < hi)
-            {
-                int pivot = Partition(num, lo, hi);
-
-                if (pivot > 1)
-                {
-                    QuickSort(num, lo, pivot - 1);
-                }
-                if (pivot + 1 < hi)
-                {
-                    QuickSort(num, pivot + 1, hi);
-                }
-            }
-        }
-
         static void QuickSortMain(int[] num)
         {
             Console.WriteLine("\nQuicksort");
@@ -138,32 +120,20 @@ namespace Kotitehtava_Delegate
             Array.Sort(num);
         }
 
-        static void Metodi(SortDelegate sortDelegate)
+        static void TeeMittaukset(SortDelegate sortDelegate)
         {
-            // CreateArrayDelegate randomOrder = new CreateArrayDelegate(RandomOrder);
+            CreateArrayDelegate randomOrder = new CreateArrayDelegate(CreateRandomOrderTable);
             CreateArrayDelegate ascOrder = new CreateArrayDelegate(CreateAscendingTable);
             CreateArrayDelegate descOrder = new CreateArrayDelegate(CreateDescendingTable);
 
-            //CreateAscendingTable(ascOrder);
-            int[] num = new int[10000];
-            num = CreateRandomArray(ascOrder, 10000);
+            int[] num = new int[10];
+            num = CreateRandomArray(randomOrder, 10);
 
-
-            // luo taulukko (satunnaisluvuilla)
-            //int[] num = new int[10000];
-            //num = CreateRandomArray(10000);
-
-            // ota aika, käynnistä ajastin
-            Stopwatch kello = Stopwatch.StartNew();
+            Stopwatch kello = Stopwatch.StartNew(); // ota aika, käynnistä ajastin
             sortDelegate(num);
-            // ota aika ja tulosta se
-            var elapsedTime = kello.Elapsed;
+            var elapsedTime = kello.Elapsed;        // ota aika ja tulosta se
             Console.WriteLine("aika: {0}", elapsedTime);
 
-            /*foreach (var item in num)
-            {
-                Console.Write($"{item} ");
-            }*/
         }
 
         static void Main(string[] args)
@@ -175,14 +145,10 @@ namespace Kotitehtava_Delegate
             SortDelegate quick = new SortDelegate(QuickSortMain);
             SortDelegate arraySort = new SortDelegate(ArraySort);
 
-            // testataan sort1
-            Metodi(selectionSort);
-            // testataan sort2
-            Metodi(insertionSort);
-            // testataan sort2
-            Metodi(quick);
-            // Array.sort
-            Metodi(arraySort);
+            TeeMittaukset(selectionSort);
+            TeeMittaukset(insertionSort);
+            TeeMittaukset(quick);
+            TeeMittaukset(arraySort);
 
             //testing
             /*
