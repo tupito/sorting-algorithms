@@ -45,7 +45,6 @@ namespace Kotitehtava_Delegate
 
         static void SelectionSort(int[] num)
         {
-            Console.WriteLine("\nSelectionSort: ");
             int i, j, first, temp;
             for (i = num.Length - 1; i > 0; i--)
             {
@@ -63,8 +62,6 @@ namespace Kotitehtava_Delegate
 
         static void InsertionSort(int[] num)
         {
-            Console.WriteLine("\nInsertionSort");
-
             for (int i = 1; i < num.Length; i++)
             {
                 int key = num[i];
@@ -107,19 +104,16 @@ namespace Kotitehtava_Delegate
         }
         static void QuickSortMain(int[] num)
         {
-            Console.WriteLine("\nQuicksort");
             QuickSort(num, 0, num.Length - 1);
         }
 
         static void ArraySort(int[] num)
         {
-            Console.WriteLine("\nArray.Sort");
             Array.Sort(num);
         }
 
         static void MergeSortMain(int[] num)
         {
-            Console.WriteLine("\nMergeSort");
             MergeSort(num, 0, num.Length-1);
         }
 
@@ -192,17 +186,17 @@ namespace Kotitehtava_Delegate
             // järjestämätön taulukko
             num = CreateRandomArray(randomOrder, arrSize);
             var elapsedTime = MittaaAika(sortDelegate, num);
-            Console.WriteLine("Järjestämätön taulukko, aika: {0}", elapsedTime);
+            Console.WriteLine("Järjestämätön taulukko \t aika: {0}", elapsedTime);
 
             // nouseva järjestys
             num = CreateRandomArray(ascOrder, arrSize);
             elapsedTime = MittaaAika(sortDelegate, num);
-            Console.WriteLine("Nouseva taulukko, aika: {0}", elapsedTime);
+            Console.WriteLine("Nouseva taulukko \t aika: {0}", elapsedTime);
 
             // laskeva järjestys
             num = CreateRandomArray(descOrder, arrSize);
             elapsedTime = MittaaAika(sortDelegate, num);
-            Console.WriteLine("Laskeva taulukko, aika: {0}", elapsedTime);
+            Console.WriteLine("Laskeva taulukko \t aika: {0}", elapsedTime);
         }
 
         static TimeSpan MittaaAika(SortDelegate sortDelegate, int[] num)
@@ -220,10 +214,15 @@ namespace Kotitehtava_Delegate
             SortDelegate arraySort = new SortDelegate(ArraySort);
             SortDelegate mergeSort = new SortDelegate(MergeSortMain);
 
+            Console.WriteLine("SelectionSort");
             TeeMittaukset(selectionSort);
+            Console.WriteLine("\nInsertionSort");
             TeeMittaukset(insertionSort);
+            Console.WriteLine("\nQuicksort");
             TeeMittaukset(quick);
+            Console.WriteLine("\narraySort");
             TeeMittaukset(arraySort);
+            Console.WriteLine("\nmergeSort");
             TeeMittaukset(mergeSort);
         }
     }
