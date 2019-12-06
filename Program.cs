@@ -210,7 +210,7 @@ namespace Kotitehtava_Delegate
         {
             SortDelegate selectionSort = new SortDelegate(SelectionSort);
             SortDelegate insertionSort = new SortDelegate(InsertionSort);
-            SortDelegate quick = new SortDelegate(QuickSortMain);
+            SortDelegate quickSort = new SortDelegate(QuickSortMain);
             SortDelegate arraySort = new SortDelegate(ArraySort);
             SortDelegate mergeSort = new SortDelegate(MergeSortMain);
 
@@ -219,7 +219,7 @@ namespace Kotitehtava_Delegate
             Console.WriteLine("\nInsertionSort");
             TeeMittaukset(insertionSort);
             Console.WriteLine("\nQuicksort");
-            TeeMittaukset(quick);
+            TeeMittaukset(quickSort);
             Console.WriteLine("\narraySort");
             TeeMittaukset(arraySort);
             Console.WriteLine("\nmergeSort");
