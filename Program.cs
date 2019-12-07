@@ -45,17 +45,21 @@ namespace Kotitehtava_Delegate
 
         static void SelectionSort(int[] num)
         {
-            int i, j, first, temp;
-            for (i = num.Length - 1; i > 0; i--)
+            int n = num.Length;
+
+            // One by one move boundary of unsorted subarray 
+            for (int i = 0; i < n - 1; i++)
             {
-                first = 0;   //initialize to subscript of first element
-                for (j = 1; j <= i; j++)   //locate smallest element between positions 1 and i.
-                {
-                    if (num[j] > num[first])
-                        first = j;
-                }
-                temp = num[first];   //swap smallest found with element in position i.
-                num[first] = num[i];
+                // Find the minimum element in unsorted array 
+                int min_idx = i;
+                for (int j = i + 1; j < n; j++)
+                    if (num[j] < num[min_idx])
+                        min_idx = j;
+
+                // Swap the found minimum element with the first 
+                // element 
+                int temp = num[min_idx];
+                num[min_idx] = num[i];
                 num[i] = temp;
             }
         }
@@ -179,7 +183,7 @@ namespace Kotitehtava_Delegate
             CreateArrayDelegate ascOrder = new CreateArrayDelegate(CreateAscendingTable);
             CreateArrayDelegate descOrder = new CreateArrayDelegate(CreateDescendingTable);
 
-            int arrSize = 10000;
+            int arrSize = 500000;
 
             int[] num = new int[arrSize];
 
